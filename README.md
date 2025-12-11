@@ -1,54 +1,69 @@
-# Dining Philosophers – C++20, CMake, ncurses
+# Concurrency Philosophers Sim
 
-Wizualna symulacja klasycznego problemu **Filozofów u stołu** (Dining Philosophers) w C++ z użyciem wątków POSIX, semaforów i biblioteki **ncurses**.  
-Projekt zawiera trzy warianty algorytmów: **NAIVE** (możliwy deadlock), **STARVATION** (możliwe zagłodzenie), **SAFE** (bez deadlocku i bez zagłodzenia).
+![Language](https://img.shields.io/badge/language-C++-00599C.svg)
+![Platform](https://img.shields.io/badge/platform-Linux-FCC624.svg)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-> **Uwaga:** Uruchamiaj w **zewnętrznym terminalu**, nie wbudowanej konsoli IDE – `ncurses` potrafi „migać” lub nie działać poprawnie w konsoli CLion.
+A multi-threaded simulation of the classic **Dining Philosophers Problem**, implemented in C++ on a Linux environment using CLion.
 
----
+This project demonstrates synchronization techniques using **semaphores** and mutexes to manage shared resources (forks) among concurrent threads (philosophers). The core goal of this simulation is to benchmark and compare **three different resource access strategies** to prevent deadlocks and starvation.
 
-## Wymagania
+## 🚀 Key Features
 
-### Linux / WSL (Ubuntu/Debian)
+* **Multi-threading:** Implementation using POSIX threads (or C++ `std::thread`) to simulate concurrent behaviors.
+* **Synchronization:** Usage of semaphores and mutexes for safe resource locking.
+* **Comparative Analysis:** Side-by-side comparison of three distinct algorithms for resource acquisition.
+* **Performance Metrics:** Tracks execution time, waiting times, and successfully eaten meals.
+
+## 🧠 Implemented Strategies
+
+The simulation benchmarks three approaches to solving the concurrency deadlock problem:
+
+1.  **Strategy 1 (Naive Approach):** Philosophers attempt to grab the left fork, then the right fork concurrently. Used as a baseline to demonstrate deadlock scenarios.
+2.  **Strategy 2 (Resource Hierarchy / Asymmetric):** Philosophers are assigned a strict order for picking up forks (e.g., odd-numbered philosophers pick left first, even-numbered pick right first) to prevent circular wait conditions.
+3.  **Strategy 3 (Arbitrator / Access Limiting):** A semaphore restricts the number of philosophers eating simultaneously (e.g., allowing only N-1 philosophers at the table) to ensure at least one philosopher can always proceed.
+
+## 🛠️ Technologies
+
+* **Language:** C++ (Standard 17/20)
+* **Build System:** CMake
+* **IDE:** CLion
+* **OS:** Ubuntu / Linux
+* **Libraries:** `pthread` / `<semaphore>` / `<mutex>`
+
+## 💻 Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed on your Ubuntu system:
+
 ```bash
 sudo apt update
-sudo apt install -y clang cmake make \
-    libncurses5-dev libncursesw5-dev
+sudo apt install build-essential cmake
 ```
 
-## Budowanie (clang + CMake)
+## Building the Project
+1. Clone the repository:
+```bash
+git clone [https://github.com/](https://github.com/)[sonervous7]/concurrency-philosophers-sim.git
+cd concurrency-philosophers-sim
+```
+2. Create a build directory and compile:
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
 
-cmake -S . -B build \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_COMPILER=clang \
-  -DCMAKE_CXX_COMPILER=clang++
+## Running the Simulation
+After compiling, you can run the executable.
+```bash
+./concurrency-philosophers-sim
+```
 
-cmake --build build -j
-
-
-## Uruchomienie
-./build/philosophers
-
-## Tryby działania
-
-W projekcie są trzy tryby; wybór zwykle odbywa się w konstruktorze `Table` lub przy starcie w `main.cpp` (np. `Table table(Mode::STARVATION);`):
-
-- **NAIVE** – *możliwy deadlock*  
-  Każdy filozof **blokująco** pobiera lewą pałeczkę, potem **blokująco** prawą. Wspólny start i równa kolejność prowadzi często do cyklu „trzymam jedną i czekam na drugą”, czyli **zakleszczenia**.
-
-- **STARVATION** – *możliwe zagłodzenie*  
-  Wersja z tzw. **kelnerem N−1** (przy stole max `N-1`), **blokujące** pobieranie pałeczek. Deadlocka nie ma, ale z racji braku gwarancji FIFO w semaforach kelnera może wystąpić **niesprawiedliwość** – po dłuższym czasie jeden filozof bywa wyraźnie „chudszy”.
-
-- **SAFE** – *bez deadlocku i bez zagłodzenia*  
-  Wariant zapewniający **sprawiedliwość** (np. kelner z kolejką FIFO / round-robin / porządek zasobów). Każdy w skończonym czasie dostaje możliwość jedzenia.
-
-## Legenda i odczyt wizualizacji
-
-- **Kolory stanów:**
-    - **biały** – THINKING (myśli),
-    - **czerwony/żółty** – HUNGRY (głodny, czeka na komplet pałeczek),
-    - **zielony** – EATING (je).
-
-- **Licznik posiłków:** mały kwadrat/ramka przy każdym filozofie pokazuje **liczbę zjedzonych porcji**.
-
-- **Pałeczki (forki):** numery przy pozycjach pałeczek wskazują **aktualnego właściciela** danej pałeczki; brak numeru = pałeczka leży na stole (wolna).
+## 📂 Project Structure
+- `src/` - Source code (`.cpp` files).
+- `include/` - Header files (`.h` files).
+- `CMakeLists.txt` - CMake configuration file.
+- `README.md` - Project Documentation
