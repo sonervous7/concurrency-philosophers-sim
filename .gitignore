@@ -1,0 +1,27 @@
+# --- Pliki budowania CMake (najważniejsze!) ---
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# --- Pliki skompilowane i binarne ---
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.a
+*.lib
+bin/
+dist/
+
+# --- Ustawienia IDE (JetBrains/CLion) ---
+# Ignorujemy ustawienia osobiste (workspace), ale czasem warto trzymać
+# konfigurację projektu. Dla świętego spokoju na początku możesz ignorować całość:
+.idea/
+
+# --- Pliki systemowe ---
+.DS_Store
+Thumbs.db
